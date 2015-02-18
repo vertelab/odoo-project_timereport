@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+<!--
+         <record id="view_todo_list" model="ir.ui.view">
+            <field name="name">project.timereport.todo.form</field>
+            <field name="model">project.todo.list</field>
+            <field name="arch" type="xml">
+                    <field name="activity"/>   
+                    <field name="state"/>  
+            </field>
+        </record>
+-->
+    </data>
+</openerp>
