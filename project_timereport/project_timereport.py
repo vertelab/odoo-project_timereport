@@ -67,7 +67,8 @@ class project_timereport(http.Controller):
            #     'date': partner.property_account_position and partner.property_account_position.id or False,
                 'user_id': user.id,
                 })
-           
+                
+            return werkzeug.utils.redirect("/timereport/%s" %user.id)
         ctx = {
             'user' : user,
             'task': task,             
@@ -84,7 +85,7 @@ class project_timereport(http.Controller):
             return False
             
             #len(split_string)==2 == hh:mm      split_string[0] = hours      split_string[1] = minutes
-            if len(split_string) ==2 and 0 < len(split_string[0]) < 3 and len(split_string[1]) == 2 :
+        if len(split_string) ==2 and 0 < len(split_string[0]) < 3 and len(split_string[1]) == 2 :
                 
             #check 'string' hour
             if int(split_string[0]) < 0 or int(split_string[0]) > 23:

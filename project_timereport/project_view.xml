@@ -77,9 +77,9 @@
                                                     <label for="NoticeInput">Notice</label>
                                                     <textarea class="form-control" name="name" rows="5" placeholder="Enter your notice here"/>
                                                 </div>  
-                                                <br/>
-                                                <input name="save" type="submit" class="btn btn-primary btn-lg pull-center mt8" />
-                                                <br/><br/>
+                                                <br/>                                                
+                                                    <input name="save" type="submit" class="btn btn-primary btn-lg pull-center mt8" />
+                                                    <br/><br/>
                                             </form>
                                         </div>
                                         </div> 
