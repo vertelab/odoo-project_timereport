@@ -1,15 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        
+<!-- Template for timereport list -->
+        <template id="project_timereport" name="Project Timereport">
+            &lt;!DOCTYPE html&gt;
+            <html style="height: 100%">
+                <head>
+                    <title>Todo List</title>
+                    
+  
+                </head>
+                <body>
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty"> 
+
+                        <section class="mb32 mt16">
+                            <div class="container">
+                                    
+                                    <section class="oe_container oe_dark">
+                                        <div class="oe_row">           
+                                        <div>
+                                            <br></br>
+                                            <h2>Todo List</h2>                                                      
+                                            
+                                            <font size="4">  
+                                            <ul>
+                                            <t t-foreach="tasks" t-as="t">                                       
+                                                <li><a t-att-href="'/timereport/%s/%s' %(user.id,t.id)">
+                                                   <t t-raw="t.name"/></a>
+                                                </li> 
+                                            </t>
+                                            </ul>
+                                            </font>
+
+                                        </div>
+                                        </div> 
+                                    </section>  
+                            </div>
+                        </section>
+
+                    </div>
+                </t>
+                </body>
+            </html>
+        </template>
+        
+<!-- Template for timereport form -->
+        <template id="project_timereport_form" name="Project Timereport Form">
+            &lt;!DOCTYPE html&gt;
+            <html style="height: 100%">
+                <head>
+                  <title>Task Details</title>  
+                </head>
+                <body>
+                <t t-call="website.layout">
+                    <div id="wrap" class="oe_structure oe_empty"> 
+
+                        <section class="mb32 mt16">
+                            <div class="container">
+                                    <section class="oe_container oe_dark">
+                                        <div class="oe_row">           
+                                        <div align="center">
+                                            <br></br>
+                                            <h2>Details</h2>                                                      
+                                            <form t-att-action="'/timereport/%s' %user.id">
+                                                <div align="left" class="form-group">
+                                                    <label for="TimeInput">Time</label>
+                                                    <input type="time" class="form-control" id="Timeinput" placeholder="00:00"/>
+                                                </div>
+                                                <div align="left">
+                                                    <label for="NoticeInput">Notice</label>
+                                                    <textarea class="form-control" rows="5" placeholder="Enter your notice here"/>
+                                                </div>
+                                                
+                                                    $this->widget(
+                                                        'booster.widgets.TbTimePicker',
+                                                        array(
+                                                        'model' => new Person,
+                                                        'attribute' => 'hours',
+                                                        'options' => array(
+                                                        'showMeridian' => false
+                                                        ),
+                                                        'wrapperHtmlOptions' => array('class' => 'col-md-3'),
+                                                        )
+                                                        );
+                                                <input name="save" type="submit" class="btn btn-primary btn-lg pull-center mt8"/>
 <!--
-         <record id="view_todo_list" model="ir.ui.view">
-            <field name="name">project.timereport.todo.form</field>
-            <field name="model">project.todo.list</field>
-            <field name="arch" type="xml">
-                    <field name="activity"/>   
-                    <field name="state"/>  
-            </field>
-        </record>
+                                                <fieldset>
+                                                    <p>
+                                                      <label>Time</label>
+                                                      <input type = "text"
+                                                            name="hours"
+                                                            id = "myText"
+                                                            placeholder = "00:00"/>
+                                                    </p>
+                                                    <p>
+                                                        <label>Notes</label>
+                                                        <textarea name="name"> "Write your notice here"</textarea>
+                                                    </p>
+                                                    
+                                                    
+                                                        
+
+                                                </fieldset>
 -->
+                                            </form>
+                                        </div>
+                                        </div> 
+                                    </section>  
+                            </div>
+                        </section>
+
+                    </div>
+                </t> 
+                </body>
+            </html>
+        </template>
     </data>
 </openerp>

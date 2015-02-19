@@ -28,7 +28,7 @@ Report working time.
 """,
 'author': 'Vertel AB',
 'website': 'http://www.vertel.se',
-'depends': ['project'],
+'depends': ['project','hr_timesheet_sheet','hr_timesheet','hr_timesheet_invoice','project_timesheet'],
 'data': ['project_view.xml',
 ],
 'installable': True,
