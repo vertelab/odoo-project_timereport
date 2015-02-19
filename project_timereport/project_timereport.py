@@ -25,6 +25,7 @@ from openerp import http
 from openerp.http import request
 from openerp import SUPERUSER_ID
 import openerp.tools
+import string
 import werkzeug
 import logging
 _logger = logging.getLogger(__name__)
@@ -59,18 +60,40 @@ class project_timereport(http.Controller):
         if request.httprequest.method == 'POST':
             _logger.warning("This is timereport post %s " % (post))
             
-            work_id = pool.get('project.task.id').create(cr,uid,{
+            work_id = pool.get('project.task.work').create(cr,uid,{
+                'task_id':task.id,
                 'name': post.get('name'),
-                'hours': post.get('hours'),
+                'hours': self.checkTimeString(post.get('hours')),
            #     'date': partner.property_account_position and partner.property_account_position.id or False,
                 'user_id': user.id,
                 })
-
            
         ctx = {
             'user' : user,
-            'tasks': False,             
+            'task': task,             
             }
     
 
         return request.render('project_timereport.project_timereport_form', ctx)
+
+    def checkTimeString(self,string_time):
+        try:
+            split_string = string_time.split(":")
+        except:
+            print "Wrong format, must be a string"
+            return False
+            
+            #len(split_string)==2 == hh:mm      split_string[0] = hours      split_string[1] = minutes
+            if len(split_string) ==2 and 0 < len(split_string[0]) < 3 and len(split_string[1]) == 2 :
+                
+            #check 'string' hour
+            if int(split_string[0]) < 0 or int(split_string[0]) > 23:
+                return False
+      
+            #check 'string' minute
+            if int(split_string[1]) < 0 or int(split_string[1]) > 59:
+                return False
+        else: 
+            return False
+            
+        return float(split_string[1])/60+float(split_string[0])

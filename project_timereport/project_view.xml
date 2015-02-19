@@ -64,47 +64,22 @@
                                         <div align="center">
                                             <br></br>
                                             <h2>Details</h2>                                                      
-                                            <form t-att-action="'/timereport/%s' %user.id">
-                                                <div align="left" class="form-group">
-                                                    <label for="TimeInput">Time</label>
-                                                    <input type="time" class="form-control" id="Timeinput" placeholder="00:00"/>
+                                            <form t-att-action="'/timereport/%s/%s' %(user.id, task.id)" method="POST">
+                                                <div class="pull-right form-group">
+                                                    <label for="hours">Time Spent</label>
+                                                    <div class="form-group">
+                                                    <input name="hours" type="hour" class="col-sm-offset-1" id="hours" 
+                                                    placeholder="00:00"/>
+                                                    </div>
                                                 </div>
+                                                <br/><br/><br/>
                                                 <div align="left">
                                                     <label for="NoticeInput">Notice</label>
-                                                    <textarea class="form-control" rows="5" placeholder="Enter your notice here"/>
-                                                </div>
-                                                
-                                                    $this->widget(
-                                                        'booster.widgets.TbTimePicker',
-                                                        array(
-                                                        'model' => new Person,
-                                                        'attribute' => 'hours',
-                                                        'options' => array(
-                                                        'showMeridian' => false
-                                                        ),
-                                                        'wrapperHtmlOptions' => array('class' => 'col-md-3'),
-                                                        )
-                                                        );
-                                                <input name="save" type="submit" class="btn btn-primary btn-lg pull-center mt8"/>
-<!--
-                                                <fieldset>
-                                                    <p>
-                                                      <label>Time</label>
-                                                      <input type = "text"
-                                                            name="hours"
-                                                            id = "myText"
-                                                            placeholder = "00:00"/>
-                                                    </p>
-                                                    <p>
-                                                        <label>Notes</label>
-                                                        <textarea name="name"> "Write your notice here"</textarea>
-                                                    </p>
-                                                    
-                                                    
-                                                        
-
-                                                </fieldset>
--->
+                                                    <textarea class="form-control" name="name" rows="5" placeholder="Enter your notice here"/>
+                                                </div>  
+                                                <br/>
+                                                <input name="save" type="submit" class="btn btn-primary btn-lg pull-center mt8" />
+                                                <br/><br/>
                                             </form>
                                         </div>
                                         </div> 
