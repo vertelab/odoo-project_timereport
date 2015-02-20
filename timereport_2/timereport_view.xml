@@ -22,16 +22,32 @@
                                         <div class="oe_row">           
                                         <div>
                                             <br></br>
-                                            <h2>Todo List</h2>                                                      
+                                            <h2><strong>Todo List</strong></h2>                                                      
                                             
                                             <font size="4">  
+<!--
                                             <ul>
-                                            <t t-foreach="tasks" t-as="t">                                       
-                                                <li><a t-att-href="'/timereport/%s/%s' %(user.id,t.id)">
-                                                   <t t-raw="t.name"/></a>
-                                                </li> 
-                                            </t>
+-->
+                                            <table class="table table-striped">
+                                                <t t-foreach="tasks" t-as="t">                                       
+                                                <tr><td>
+                                                    <a t-att-href="'/treport/%s/%s' %(user.id,t.id)">
+                                                    <t t-raw="t.name"/></a>
+                                                    <td>
+                                                        <form t-att-action="'/treport/%s/%s' %(user.id, t.id)" method="POST">
+                                                        <input name="save" type="submit" class="btn btn-primary btn-xs pull-center mt8" 
+                                                            value="Start/Stop"/>
+                                                        </form>
+                                                    </td>
+                                                    </td>
+                                                </tr>
+                                                </t>
+                                            </table>
+                                            
+                                            
+<!--
                                             </ul>
+-->
                                             </font>
 
                                         </div>
@@ -63,22 +79,19 @@
                                         <div class="oe_row">           
                                         <div align="center">
                                             <br></br>
-                                            <h2>Details</h2>                                                      
-                                            <form t-att-action="'/timereport/%s/%s' %(user.id, task.id)" method="POST">
-                                                <div class="pull-right form-group">
-                                                    <label for="hours">Time Spent</label>
-                                                    <div class="form-group">
-                                                    <input name="hours" type="hour" class="col-sm-offset-1" id="hours" 
-                                                    placeholder="00:00"/>
-                                                    </div>
+                                            <h2><strong>Details</strong></h2>  
+                                            <br/><br/>                                                    
+                                            <form t-att-action="'/treport/%s/%s' %(user.id, task.id)" method="POST">
+                                                <div class="pull-left form-group">
+                                                    <label class=" control-label"><t t-raw="task.name"/></label>
                                                 </div>
                                                 <br/><br/><br/>
                                                 <div align="left">
                                                     <label for="NoticeInput">Notice</label>
                                                     <textarea class="form-control" name="name" rows="5" placeholder="Enter your notice here"/>
                                                 </div>  
-                                                <br/>                                                
-                                                    <input name="save" type="submit" class="btn btn-primary btn-lg pull-center mt8" />
+                                                <br/>                                       
+                                                    <input name="save" type="submit" class="btn btn-primary btn-lg pull-center mt8" value="Save" />
                                                     <br/><br/>
                                             </form>
                                         </div>

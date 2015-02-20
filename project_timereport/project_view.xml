@@ -7,9 +7,27 @@
             &lt;!DOCTYPE html&gt;
             <html style="height: 100%">
                 <head>
-                    <title>Todo List</title>
+                    <!--FOR APPLE-->
+                    <meta name="apple-mobile-web-app-capable" content="yes"/>
+                    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+                    <link rel="apple-touch-startup-image" href="/project_timereport/static/description/TRW.png"/>
+                    <link rel="apple-touch-icon" href="/project_timereport/static/description/TRW.png"/>
+                    <link rel="apple-touch-icon-precomposed" sizes="128x128" href="/project_timereport/static/description/TRW.png"/>
+
+                    <!-- WEBPAGE ICON -->
+                    <!--from http://www.faviconer.com/icon/index
+                        http://stackoverflow.com/questions/4888377/how-to-add-a-browser-tab-icon-for-a-website
+                    -->
+                    <link rel="shortcut icon" href="/project_timereport/static/description/TRW.png"  type="image/x-icon" /> 
+                    <link rel="icon" href="/project_timereport/static/description/TRW.png" type="image/x-icon"/>
+
+                    <!--FOR ANDROID-->
+                    <meta name="mobile-web-app-capable" content="yes"/>
+                    <link rel="shortcut icon" sizes="196x196" href="/project_timereport/static/description/TRW.png"/>
+                    <link rel="shortcut icon" sizes="128x128" href="/project_timereport/static/description/TRW.png"/>
                     
-  
+                    <title>Todo List</title>
+
                 </head>
                 <body>
                 <t t-call="website.layout">
@@ -22,7 +40,7 @@
                                         <div class="oe_row">           
                                         <div>
                                             <br></br>
-                                            <h2>Todo List</h2>                                                      
+                                            <h2><strong>Todo List</strong></h2> <br/>                                                     
                                             
                                             <font size="4">  
                                             <ul>
@@ -51,7 +69,23 @@
             &lt;!DOCTYPE html&gt;
             <html style="height: 100%">
                 <head>
-                  <title>Task Details</title>  
+                    <!--FOR APPLE-->
+                    <meta name="apple-mobile-web-app-capable" content="yes"/>
+                    <meta name="apple-mobile-web-app-status-bar-style" content="black"/>
+                    <link rel="apple-touch-startup-image" href="/project_timereport/static/description/TRW.png"/>
+                    <link rel="apple-touch-icon" href="/project_timereport/static/description/TRW.png"/>
+                    <link rel="apple-touch-icon-precomposed" sizes="128x128" href="/project_timereport/static/description/TRW.png"/>
+
+                    <!-- WEBPAGE ICON -->
+                    <link rel="shortcut icon" href="/project_timereport/static/description/TRW.png"  type="image/x-icon" /> 
+                    <link rel="icon" href="/project_timereport/static/description/TRW.png" type="image/x-icon"/>
+
+                    <!--FOR ANDROID-->
+                    <meta name="mobile-web-app-capable" content="yes"/>
+                    <link rel="shortcut icon" sizes="196x196" href="/project_timereport/static/description/TRW.png"/>
+                    <link rel="shortcut icon" sizes="128x128" href="/project_timereport/static/description/TRW.png"/>
+                    
+                    <title>Task Details</title>  
                 </head>
                 <body>
                 <t t-call="website.layout">
@@ -63,21 +97,49 @@
                                         <div class="oe_row">           
                                         <div align="center">
                                             <br></br>
-                                            <h2>Details</h2>                                                      
+                                            <h2><strong>Details</strong></h2>  <br/><br/>                                                      
                                             <form t-att-action="'/timereport/%s/%s' %(user.id, task.id)" method="POST">
-                                                <div class="pull-right form-group">
-                                                    <label for="hours">Time Spent</label>
-                                                    <div class="form-group">
-                                                    <input name="hours" type="hour" class="col-sm-offset-1" id="hours" 
-                                                    placeholder="00:00"/>
-                                                    </div>
+                                                
+                                                <div class="pull-left form-group">
+                                                    <label class="control-label" t-raw="task.name"/>
+                                                    
                                                 </div>
-                                                <br/><br/><br/>
+                                                <br/><br/>
+                                                <br/><br/>
+                                                
                                                 <div align="left">
                                                     <label for="NoticeInput">Notice</label>
                                                     <textarea class="form-control" name="name" rows="5" placeholder="Enter your notice here"/>
-                                                </div>  
+                                                </div> <br/>                                                
+                                                <br/> 
+                                                <div class="pull-left form-group">
+                                                    <label for="hours">Time Spent</label>
+                                                    
+                                                    <input name="hours" type="hour" id="hours" placeholder="00:00"/>
+                                                    
+                                                </div>
+                                                <br/><br/>
+                                                <br/><br/>
+                                                
+                                                
+                                               
+                                                
+                                                <div class="dropdown">
+                                                    <button class="btn btn-default dropdown-toggle pull-left" type="button" id="menu1" 
+                                                    data-toggle="dropdown">State<span class="caret"></span></button>
+                                                    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Blocked</a></li>
+                                                      <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Ready for next stage</a></li>
+<!--
+                                                      <li role="presentation" class="divider"></li>
+                                                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Delete</a></li>
+-->
+                                                    </ul>
+                                                </div> 
                                                 <br/>                                                
+                                                <br/>                                                
+                                                <br/>                                                
+                                                                                               
                                                     <input name="save" type="submit" class="btn btn-primary btn-lg pull-center mt8" />
                                                     <br/><br/>
                                             </form>

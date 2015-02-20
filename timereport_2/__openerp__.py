@@ -19,7 +19,7 @@
 #
 ##############################################################################
 {
-'name': 'Time Report Version 2',
+'name': 'Time Report v.2',
 'version': '0.1',
 'category': 'Project',
 'description': """

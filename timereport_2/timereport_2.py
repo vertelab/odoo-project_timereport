@@ -36,46 +36,42 @@ _logger = logging.getLogger(__name__)
 
 class project_timereport(http.Controller):
         
-    @http.route(['/timereport/<model("res.users"):user>', '/timereport/<model("res.users"):user>/list', '/timereport'], type='http', auth="user", website=True)
+    @http.route(['/treport/<model("res.users"):user>', '/treport/<model("res.users"):user>/list', '/treport'], type='http', auth="user", website=True)
     def timereport_list(self, user=False, clicked=False, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         if not user:
-            return werkzeug.utils.redirect("/timereport/%s/list" %uid,302)
-           
+            return werkzeug.utils.redirect("/treport/%s/list" %uid,302)
+            
+       
         ctx = {
             'user' : user,
             'tasks': request.registry.get('project.task').browse(cr,uid,request.registry.get('project.task').search(cr,uid,[("user_id","=",user.id)])
-            ,context=context),             
+            ,context=context), 
             }
     
 
-        return request.render('project_timereport.project_timereport', ctx)
+        return request.render('timereport_2.project_timereport', ctx)
         
-    @http.route(['/timereport/<model("res.users"):user>/<model("project.task"):task>'], type='http', auth="user", website=True)
-    def timereport_form(self, user=False, task=False, **post):
+    @http.route(['/treport/<model("res.users"):user>/<model("project.task"):task>'], type='http', auth="user", website=True)
+    def timereport_form(self, user=False,task=False, **post):
         cr, uid, context, pool = request.cr, request.uid, request.context, request.registry
         if not user:
-            return werkzeug.utils.redirect("/timereport/%s/form" %uid,302)
+            return werkzeug.utils.redirect("/treport/%s/form" %uid,302)
             
         if request.httprequest.method == 'POST':
             _logger.warning("This is timereport post %s " % (post))
-            
-            work_id = pool.get('project.task.work').create(cr,uid,{
-                'task_id':task.id,
-                'name': post.get('name'),
-                'hours': self.checkTimeString(post.get('hours')),
-           #     'date': partner.property_account_position and partner.property_account_position.id or False,
-                'user_id': user.id,
-                })
-                
-            return werkzeug.utils.redirect("/timereport/%s" %user.id)
+
+            task.start_stop_work(context, post.get('name'))
+            return werkzeug.utils.redirect("/treport/%s" %user.id) 
+        
+        
         ctx = {
             'user' : user,
             'task': task,             
             }
     
 
-        return request.render('project_timereport.project_timereport_form', ctx)
+        return request.render('timereport_2.project_timereport_form', ctx)
 
     def checkTimeString(self,string_time):
         try:

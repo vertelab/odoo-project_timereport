@@ -61,12 +61,14 @@ class project_timereport(http.Controller):
             _logger.warning("This is timereport post %s " % (post))
             
             work_id = pool.get('project.task.work').create(cr,uid,{
-                'task_id':task.id,
+                'task_id':task.id, 
                 'name': post.get('name'),
                 'hours': self.checkTimeString(post.get('hours')),
            #     'date': partner.property_account_position and partner.property_account_position.id or False,
                 'user_id': user.id,
                 })
+                
+            
                 
             return werkzeug.utils.redirect("/timereport/%s" %user.id)
         ctx = {
