@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <!-- mobile layout extend -->
+        <template id="layout_extend_timereport" name="Main layout Extend Timereport">
+            <t t-call="website_mobile.mobile_layout">
+                <t t-set="root" t-value="root"/>
+                <t t-set="add" t-value="'%sadd' %root"/>
+                <t t-set="search" t-value="'%ssearch' %root"/>
+                <t t-raw="0"/>
+            </t>
+        </template>
+        <template id="object_list" name="Object List">
+            <t t-call="website_crm_partner.layout_extend_partner">
+                <div>
+                    <!-- Content Zone -->
+                    <div class="content">
+                        <!-- List Contacts -->
+                        <ul t-if="objects" class="">
+                            <li t-foreach="objects" t-as="object" class="">
+                                <a class="navigate-right" t-attf-href="#{ root }#{ object.id }" data-transition="slide-in">
+                                    <h3>
+                                        <span t-esc="object.name" />
+                                        <i class="fa fa-angle-right pull-right" style="padding-right: 40px;"/>
+                                    </h3>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <!-- Customer Information-->
+        <template id="object_detail" name="Object Detail Information">
+            <t t-call="website_crm_partner.layout_extend_partner">
+                <div class="container mt32 mb32">
+                    <t t-call="mobile_project_timereport.form_fields"/>
+                    <div class="container">
+                        <t t-if="object">
+                            <h2><a t-if="mode=='view'" class="fa fa-pencil-square-o pull-right" t-attf-href="#{ root }#{ object.id }/edit" /></h2>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <!-- form fileds -->
+        <template id="form_fields">
+            <form t-attf-action="" method="post">
+                <h2 t-esc="object.name" class="mb32"/>
+                <div t-foreach="fields" t-as="field" class="form-group">
+                    <t t-set="ttype" t-value="request.env[model].fields_get([field])[field]['type']"/>
+                    <t t-set="type" t-value="text"/>
+                    <t t-if="'mail' in field" t-set="type" t-value="email"/>
+                    <t t-if="ttype in ['date', 'datetime']" t-set="type" t-value="date"/>
+                    <t t-if="ttype in ['integer', 'float']" t-set="type" t-value="number"/>
+                    <!-- field label -->
+                    <label><t t-esc="request.env[model].fields_get([field])[field]['string']" /></label>
+                    <t t-if="mode == 'view'">
+                        <t t-if="ttype != 'boolean' and ttype != 'many2one' and ttype != 'one2many'">
+                            <span t-esc="object.read([field])[0][field] if object else ''" />
+                        </t>
+                        <t t-if="ttype == 'boolean'">
+                            <span t-esc="'Yes' if object.read([field])[0][field] else 'No'" />
+                        </t>
+                        <t t-if="ttype == 'many2one'">
+                            <span t-esc="object.read([field])[0][field][1]" />
+                        </t>
+                        <t t-if="ttype == 'one2many'">
+                            <t t-set="one2many_relation_list" t-value="object.read([field])[0][field][1]" />
+                            <ul>
+                                <t t-if="len(one2many_relation_list) &gt; 0" t-foreach="one2many_relation_list" t-as="rl" >
+                                    <li><t t-esc="rl"/></li>
+                                </t>
+                            </ul>
+                        </t>
+                    </t>
+                    <t t-if="mode == 'edit'">
+                        <!-- text -->
+                        <input t-if="ttype in ['char', 'date', 'datetime', 'float', 'integer']" class="form-control input-xs" t-att-name="field" t-att-type="type"
+                            t-att-value="object.read([field])[0][field] if object else ''"
+                            t-att-placeholder="request.env[model].fields_get([field])[field]['string']"
+                            t-att-required="request.env[model].fields_get([field])[field]['required']"
+                            t-att-help="request.env[model].fields_get([field])[field]['help']" />
+                        <!-- textarea -->
+                        <textarea t-if="ttype == 'text'" class="form-control" t-att-name="field"
+                            t-att-placeholder="request.env[model].fields_get([field])[field]['string']"
+                            t-att-required="request.env[model].fields_get([field])[field]['required']"
+                            t-att-help="request.env[model].fields_get([field])[field]['help']"><t t-esc="object.read([field])[0][field] if object else ''"/></textarea>
+                        <!-- selection -->
+                        <select t-if="ttype == 'many2one'" t-att-name="field" class="form-control selectpicker dropdown">
+                            <t t-set="many2one_relation_list" t-value="request.env[request.env[model].fields_get([field])[field]['relation']].search([])"/>
+                            <t t-if="len(many2one_relation_list) &gt; 0" t-foreach="many2one_relation_list" t-as="rl">
+                                <option t-att="{'selected': 'checked'} if rl.id == object.read([field])[0][field][0] else {}"><t t-esc="rl.name"/></option>
+                            </t>
+                        </select>
+                        <!-- boolean -->
+                        <input t-if="ttype == 'boolean'" t-att-name="field" type="checkbox" class="switch-checkbox" t-att-checked="1 if object.read([field])[0][field] else 0"/>
+                    </t>
+                </div>
+                <button class="btn btn-success btn-lg mt32 mb32" name="btn-save" value="btn-save" type="submit">Save</button>
+            </form>
+            <form t-attf-action="#{ root }#{ object.id }/report" method="post">
+                <input name="worked_desc" type="text" class="form-control" />
+                <input name="worked_hours" type="number" class="form-control" step="0.01" />
+                <button type="submit" class="form-control">Report</button>
+            </form>
+        </template>
+        <!-- hide footer -->
+        <template id="hide_footer" inherit_id="website.layout">
+            <xpath expr="//footer" position="attributes">
+                <attribute name="class">hidden</attribute>
+            </xpath>
+        </template>
+        <!-- inherit bottom menu -->
+        <template id="bottom_menu" inherit_id="website_mobile.mobile_layout">
+            <xpath expr="//div[@id='footer_container']/ul" position="inside">
+            </xpath>
+        </template>
+        <!-- css -->
+        <template id="crm_partner_css" inherit_id="website_mobile.mobile_layout">
+            <xpath expr="//t[@t-call-assets='website.assets_frontend']" position="after">
+                <style>
+
+                    .btn-lg {
+                        margin: auto;
+                        display: block;
+                    }
+
+                </style>
+            </xpath>
+        </template>
+        <!-- javascript -->
+        <template id="crm_partner_javascript" inherit_id="website_mobile.mobile_layout">
+            <xpath expr="//body" position="inside">
+                <script>
+                    $(".switch-checkbox").bootstrapSwitch();
+                </script>
+            </xpath>
+        </template>
+    </data>
+</openerp>
