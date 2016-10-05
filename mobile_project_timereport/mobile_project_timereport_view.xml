@@ -16,16 +16,14 @@
                     <!-- Content Zone -->
                     <div class="content">
                         <!-- List Contacts -->
-                        <ul t-if="objects" class="">
-                            <li t-foreach="objects" t-as="object" class="">
-                                <a class="navigate-right" t-attf-href="#{ root }#{ object.id }" data-transition="slide-in">
-                                    <h3>
-                                        <span t-esc="object.name" />
-                                        <i class="fa fa-angle-right pull-right" style="padding-right: 40px;"/>
-                                    </h3>
+                        <div t-if="objects" class="continer">
+                            <div t-foreach="objects" t-as="object" class="col-xs-12">
+                                <a t-attf-href="#{ root }#{ object.id }" data-transition="slide-in">
+                                    <h4 t-esc="object.name" class="task-row"/>
+                                    <h6 t-esc="object.project_id.name" class="task-row"/>
                                 </a>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </t>
@@ -39,6 +37,21 @@
                         <t t-if="object">
                             <h2><a t-if="mode=='view'" class="fa fa-pencil-square-o pull-right" t-attf-href="#{ root }#{ object.id }/edit" /></h2>
                         </t>
+                    </div>
+                    <hr/>
+                    <div class="mt32">
+                        <t t-set="total_spent" t-value="0"/>
+                        <t t-foreach="object.work_ids" t-as="w">
+                            <t t-set="total_spent" t-value="w.hours + total_spent"/>
+                        </t>
+                        <h3 class="text-center"><strong>Total spent: <t t-esc="total_spent"/> hours</strong></h3>
+                        <form t-if="mode == 'view'" t-attf-action="#{ root }#{ object.id }/report" method="post">
+                            <label for="worked_desc">Work Description</label>
+                            <input name="worked_desc" type="text" class="form-control input-xs" />
+                            <label for="worked_hours">Time Spent</label>
+                            <input name="worked_hours" type="number" class="form-control input-xs" step="0.50" />
+                            <button type="submit" class="btn btn-primary mt16 pull-right"><i class="fa fa-clock-o"/> Report</button>
+                        </form>
                     </div>
                 </div>
             </t>
@@ -90,19 +103,14 @@
                         <select t-if="ttype == 'many2one'" t-att-name="field" class="form-control selectpicker dropdown">
                             <t t-set="many2one_relation_list" t-value="request.env[request.env[model].fields_get([field])[field]['relation']].search([])"/>
                             <t t-if="len(many2one_relation_list) &gt; 0" t-foreach="many2one_relation_list" t-as="rl">
-                                <option t-att="{'selected': 'checked'} if rl.id == object.read([field])[0][field][0] else {}"><t t-esc="rl.name"/></option>
+                                <option t-att="{'selected': 'checked'} if rl.id == object.read([field])[0][field][0] else {}" t-att-value="rl.id"><t t-esc="rl.name"/></option>
                             </t>
                         </select>
                         <!-- boolean -->
                         <input t-if="ttype == 'boolean'" t-att-name="field" type="checkbox" class="switch-checkbox" t-att-checked="1 if object.read([field])[0][field] else 0"/>
                     </t>
                 </div>
-                <button class="btn btn-success btn-lg mt32 mb32" name="btn-save" value="btn-save" type="submit">Save</button>
-            </form>
-            <form t-attf-action="#{ root }#{ object.id }/report" method="post">
-                <input name="worked_desc" type="text" class="form-control" />
-                <input name="worked_hours" type="number" class="form-control" step="0.01" />
-                <button type="submit" class="form-control">Report</button>
+                <button t-if="mode == 'edit'" class="btn btn-success btn-lg mt32 mb32" name="btn-save" value="btn-save" type="submit">Save</button>
             </form>
         </template>
         <!-- hide footer -->
@@ -124,6 +132,12 @@
                     .btn-lg {
                         margin: auto;
                         display: block;
+                    }
+
+                    .task-row {
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
                     }
 
                 </style>

@@ -32,6 +32,7 @@ Project time report on mobile phone
     'depends': ['website_mobile', 'project_timesheet'],
     'data': [
         'mobile_project_timereport_view.xml',
+        'mobile_project_timereport_data.xml',
     ],
     'application': False,
     'installable': True,

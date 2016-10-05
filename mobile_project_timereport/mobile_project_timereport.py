@@ -29,21 +29,21 @@ import datetime
 import logging
 _logger = logging.getLogger(__name__)
 
+#~ MODULE_BASE_PATH = request.env.ref('mobile_timereport_menu').url
 MODULE_BASE_PATH = '/mobile/timereport/'
-MODULE_TITLE = _('Time Report')
+MODULE_TITLE = _('My tasks')
 
 class mobile_timereport(http.Controller):
     @http.route([
     MODULE_BASE_PATH,
     MODULE_BASE_PATH + '<model("project.task"):task>',
     MODULE_BASE_PATH + '<model("project.task"):task>/report',
-    MODULE_BASE_PATH + 'add',
-    MODULE_BASE_PATH + '<model("project.task"):task>/delete',
     MODULE_BASE_PATH + '<model("project.task"):task>/edit',
+    MODULE_BASE_PATH + '<model("project.task"):task>/delete',
     MODULE_BASE_PATH + 'search',
     ], type='http', auth='user', website=True)
-    def get_task(self, task=None, search='',**post):
-        search_domain = []
+    def get_task(self, task=None, search='', **post):
+        search_domain = [('user_id', '=', request.uid), ('date_start', '<', fields.Datetime.now())]
         model = 'project.task'
         fields_list =  ['name', 'project_id', 'description', 'planned_hours', 'stage_id']
         template = {'list': 'mobile_project_timereport.object_list', 'detail': 'mobile_project_timereport.object_detail'}
@@ -56,7 +56,7 @@ class mobile_timereport(http.Controller):
                 for field in fields_list:
                     field_type = request.env[model].fields_get([field])[field]['type']
                     if field_type == 'many2one':
-                        values[field] = [(6, 0, post.get(field))]
+                        values[field] = int(post.get(field))
                     elif field_type == 'one2many':
                         pass
                     elif field_type == 'many2many':
@@ -84,12 +84,8 @@ class mobile_timereport(http.Controller):
         elif task:  # Detail
             return request.render(template['detail'], {'model': model, 'object': task, 'fields': fields_list, 'root': MODULE_BASE_PATH, 'title': 'Time Report', 'db': request.db, 'mode': 'view'})
         return request.render(template['list'], {
-            'objects': request.env[model].search(search_domain, order='name'),
+            'objects': request.env[model].search(search_domain, order='date_start desc'),
             'title': MODULE_TITLE,
             'root': MODULE_BASE_PATH,
             'db': request.db,
         })
-
-
-
-
