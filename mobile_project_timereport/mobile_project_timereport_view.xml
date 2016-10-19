@@ -10,25 +10,22 @@
                 <t t-raw="0"/>
             </t>
         </template>
+
+<!--
         <template id="object_list" name="Object List">
             <t t-call="website_crm_partner.layout_extend_partner">
-                <div>
-                    <!-- Content Zone -->
-                    <div class="content">
-                        <!-- List Contacts -->
-                        <div t-if="objects" class="continer">
-                            <div t-foreach="objects" t-as="object" class="col-xs-12">
-                                <a t-attf-href="#{ root }#{ object.id }" data-transition="slide-in">
-                                    <h4 t-esc="object.name" class="task-row"/>
-                                    <h6 t-esc="object.project_id.name" class="task-row"/>
-                                </a>
-                            </div>
+                <div class="content">
+                    <div t-if="objects" class="continer">
+                        <div t-foreach="objects" t-as="object" class="col-xs-12">
+                            <a t-attf-href="#{ root }#{ object.id }" data-transition="slide-in">
+                                <h4 t-esc="object.name" class="task-row"/>
+                                <h6 t-esc="object.project_id.name" class="task-row"/>
+                            </a>
                         </div>
                     </div>
                 </div>
             </t>
         </template>
-        <!-- Customer Information-->
         <template id="object_detail" name="Object Detail Information">
             <t t-call="website_crm_partner.layout_extend_partner">
                 <div class="container mt32 mb32">
@@ -56,7 +53,6 @@
                 </div>
             </t>
         </template>
-        <!-- form fileds -->
         <template id="form_fields">
             <form t-attf-action="" method="post">
                 <h2 t-esc="object.name" class="mb32"/>
@@ -66,7 +62,6 @@
                     <t t-if="'mail' in field" t-set="type" t-value="email"/>
                     <t t-if="ttype in ['date', 'datetime']" t-set="type" t-value="date"/>
                     <t t-if="ttype in ['integer', 'float']" t-set="type" t-value="number"/>
-                    <!-- field label -->
                     <label><t t-esc="request.env[model].fields_get([field])[field]['string']" /></label>
                     <t t-if="mode == 'view'">
                         <t t-if="ttype != 'boolean' and ttype != 'many2one' and ttype != 'one2many'">
@@ -88,31 +83,28 @@
                         </t>
                     </t>
                     <t t-if="mode == 'edit'">
-                        <!-- text -->
                         <input t-if="ttype in ['char', 'date', 'datetime', 'float', 'integer']" class="form-control input-xs" t-att-name="field" t-att-type="type"
                             t-att-value="object.read([field])[0][field] if object else ''"
                             t-att-placeholder="request.env[model].fields_get([field])[field]['string']"
                             t-att-required="request.env[model].fields_get([field])[field]['required']"
                             t-att-help="request.env[model].fields_get([field])[field]['help']" />
-                        <!-- textarea -->
                         <textarea t-if="ttype == 'text'" class="form-control" t-att-name="field"
                             t-att-placeholder="request.env[model].fields_get([field])[field]['string']"
                             t-att-required="request.env[model].fields_get([field])[field]['required']"
                             t-att-help="request.env[model].fields_get([field])[field]['help']"><t t-esc="object.read([field])[0][field] if object else ''"/></textarea>
-                        <!-- selection -->
                         <select t-if="ttype == 'many2one'" t-att-name="field" class="form-control selectpicker dropdown">
                             <t t-set="many2one_relation_list" t-value="request.env[request.env[model].fields_get([field])[field]['relation']].search([])"/>
                             <t t-if="len(many2one_relation_list) &gt; 0" t-foreach="many2one_relation_list" t-as="rl">
                                 <option t-att="{'selected': 'checked'} if rl.id == object.read([field])[0][field][0] else {}" t-att-value="rl.id"><t t-esc="rl.name"/></option>
                             </t>
                         </select>
-                        <!-- boolean -->
                         <input t-if="ttype == 'boolean'" t-att-name="field" type="checkbox" class="switch-checkbox" t-att-checked="1 if object.read([field])[0][field] else 0"/>
                     </t>
                 </div>
                 <button t-if="mode == 'edit'" class="btn btn-success btn-lg mt32 mb32" name="btn-save" value="btn-save" type="submit">Save</button>
             </form>
         </template>
+-->
         <!-- hide footer -->
         <template id="hide_footer" inherit_id="website.layout">
             <xpath expr="//footer" position="attributes">
