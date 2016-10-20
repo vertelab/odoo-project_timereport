@@ -41,54 +41,93 @@ class mobile_timereport(mobile_crud, http.Controller):
         super(mobile_timereport, self).__init__()
         self.search_domain = [('date_start', '<', fields.Datetime.now())]
         self.model = 'project.task'
-        self.load_fields(['name', 'project_id', 'planned_hours', 'stage_id']) # help for description doesn't work
+        self.load_fields(['name', 'project_id', 'planned_hours', 'stage_id', 'work_ids']) # help for description doesn't work
         self.root = MOBILE_BASE_PATH
         self.title = _('Task')
 
     @http.route([MOBILE_BASE_PATH, MOBILE_BASE_PATH+'<model("project.task"):task>'],type='http', auth="user", website=True)
-    def task_list(self, task=None, search='',**post):
+    def task_list(self, task=None, search='', **post):
         self.search_domain.append(('user_id', '=', request.uid))
         return self.do_list(obj=task)
 
     @http.route([MOBILE_BASE_PATH+'<string:search>/search', MOBILE_BASE_PATH+'search'],type='http', auth="user", website=True)
-    def task_search(self, search=None,**post):
+    def task_search(self, search=None, **post):
         return self.do_list(search=search or post.get('search_words'))
 
     @http.route([MOBILE_BASE_PATH+'<model("project.task"):task>/edit'],type='http', auth="user", website=True)
-    def task_edit(self, task=None, search='',**post):
+    def task_edit(self, task=None, search='', **post):
         return self.do_edit(obj=task,**post)
 
     @http.route([MOBILE_BASE_PATH+'<model("project.task"):task>/delete'],type='http', auth="user", website=True)
-    def task_delete(self, task=None, search='',**post):
+    def task_delete(self, task=None, search='', **post):
         return self.do_delete(obj=task, base_path=MOBILE_BASE_PATH)
 
-    @http.route([MOBILE_BASE_PATH+'<model("project.task"):task>/report'],type='http', auth="user", website=True)
-    def task_report(self, task=None, search='',**post):
-        return self.do_report(obj=task, base_path=MOBILE_BASE_PATH)
+
+class mobile_timereport_work(mobile_crud, http.Controller):
+    _name = 'mobile.timereport.work'
+
+    def __init__(self):
+        super(mobile_timereport_work, self).__init__()
+        #~ self.search_domain = [('task_id', '=', None)]
+        self.model = 'project.task.work'
+        self.load_fields(['name', 'hours', 'date', 'user_id', 'task_id'])
+        for f in self.fields_info:
+            if f.name == 'task_id':
+                f.type = 'hidden'
+        self.root = MOBILE_BASE_PATH+'work/'
+        self.title = _('Work')
+
+    @http.route([MOBILE_BASE_PATH+'work/add'],type='http', auth="user", website=True)
+    def work_add(self, task=None, search='',**post):
+        return self.do_add(**post)
+
+    @http.route([MOBILE_BASE_PATH+'work/<model("project.task.work"):work>', MOBILE_BASE_PATH+'<model("project.task"):task>/works'],type='http', auth="user", website=True)
+    def work_list(self, task=None, work=None, search='', **post):
+        if task:
+            domain = [('task_id', '=', task.id)]
+        else:
+            domain = None
+        return self.do_list(obj=work, domain=domain)
+
+    @http.route([MOBILE_BASE_PATH+'work/<model("project.task.work"):work>/edit'],type='http', auth="user", website=True)
+    def work_edit(self, work=None, search='', **post):
+        return self.do_edit(obj=work,**post)
+
+    @http.route([MOBILE_BASE_PATH+'<model("project.task"):task>/works/edit_grid'],type='http', auth="user", website=True)
+    def work_edit_grid(self, task=None, search='', **post):
+        if task:
+            return self.do_edit_grid(obj_ids=task.work_ids, **post)
+
+    @http.route([MOBILE_BASE_PATH+'work/<model("project.task.work"):work>/delete'],type='http', auth="user", website=True)
+    def work_delete(self, work=None, search='', **post):
+        return self.do_delete(obj=work, base_path=MOBILE_BASE_PATH+'%s' %work.task_id.id)
+
+
+
 
     # time report
-    def do_report(self,obj=None, base_path='/', **post):
-        if request.httprequest.method == 'GET':
-            return request.render(template['detail'], {'crud': self, 'object': obj, 'root': base_path, 'title': obj.name, 'mode': 'report'})
-        else:
-            try:
-                self.validate_form()
-            except Exception as e:
-                return request.render(self.template['detail'], {'crud': self, 'object': obj, 'title': obj.name, 'mode': 'report'})
-            else:
-                try:
-                    work = request.env['project.task.work'].create({
-                        'task_id': task.id,
-                        'name': post.get('worked_desc'),
-                        'hours': float(post.get('worked_hours')),
-                        'date': fields.Datetime.now(),
-                        'user_id': request.uid,
-                    })
-                    request.context['alerts']=[{'subject': _('Saved'),'message':_('Time report successful'),'type': 'success'}]
-                    return request.render(self.template['detail'], {'crud': self, 'object': obj, 'title': obj.name, 'mode': 'report'})
-                except: # Catch exception message
-                    request.context['alerts']=[{'subject': _('Error'),'message':_('Time report failed'),'type': 'error'}]
-                    return request.render(self.template['detail'], {'crud': self, 'object': obj, 'title': obj.name, 'mode': 'report'})
+    #~ def do_report(self,obj=None, base_path='/', **post):
+        #~ if request.httprequest.method == 'GET':
+            #~ return request.render(template['detail'], {'crud': self, 'object': obj, 'root': base_path, 'title': obj.name, 'mode': 'report'})
+        #~ else:
+            #~ try:
+                #~ self.validate_form()
+            #~ except Exception as e:
+                #~ return request.render(self.template['detail'], {'crud': self, 'object': obj, 'title': obj.name, 'mode': 'report'})
+            #~ else:
+                #~ try:
+                    #~ work = request.env['project.task.work'].create({
+                        #~ 'task_id': task.id,
+                        #~ 'name': post.get('worked_desc'),
+                        #~ 'hours': float(post.get('worked_hours')),
+                        #~ 'date': fields.Datetime.now(),
+                        #~ 'user_id': request.uid,
+                    #~ })
+                    #~ request.context['alerts']=[{'subject': _('Saved'),'message':_('Time report successful'),'type': 'success'}]
+                    #~ return request.render(self.template['detail'], {'crud': self, 'object': obj, 'title': obj.name, 'mode': 'report'})
+                #~ except: # Catch exception message
+                    #~ request.context['alerts']=[{'subject': _('Error'),'message':_('Time report failed'),'type': 'error'}]
+                    #~ return request.render(self.template['detail'], {'crud': self, 'object': obj, 'title': obj.name, 'mode': 'report'})
 
     #~ @http.route([
     #~ MODULE_BASE_PATH,
