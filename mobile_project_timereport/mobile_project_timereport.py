@@ -25,6 +25,7 @@ from openerp import http
 from openerp.http import request
 import werkzeug
 import datetime
+import simplejson
 from openerp.addons.website_mobile.website_mobile import mobile_crud
 
 import logging
@@ -41,7 +42,7 @@ class mobile_timereport(mobile_crud, http.Controller):
         super(mobile_timereport, self).__init__()
         self.search_domain = [('date_start', '<', fields.Datetime.now())]
         self.model = 'project.task'
-        self.load_fields(['name', 'project_id', 'planned_hours', 'stage_id', 'work_ids']) # help for description doesn't work
+        self.load_fields(['name', 'project_id', 'planned_hours', 'stage_id']) # help for description doesn't work
         self.root = MOBILE_BASE_PATH
         self.title = _('Task')
 
@@ -70,12 +71,16 @@ class mobile_timereport_work(mobile_crud, http.Controller):
         super(mobile_timereport_work, self).__init__()
         #~ self.search_domain = [('task_id', '=', None)]
         self.model = 'project.task.work'
-        self.load_fields(['name', 'hours', 'date', 'user_id', 'task_id'])
+        self.load_fields(['id', 'name', 'hours', 'date', 'user_id', 'task_id'])
         for f in self.fields_info:
-            if f.name == 'task_id':
+            if f.name == 'task_id' or f.name == 'date' or f.name == 'id':
                 f.type = 'hidden'
+            if f.name == 'id':
+                f.write = False
         self.root = MOBILE_BASE_PATH+'work/'
         self.title = _('Work')
+        self.col_size_edit = '4'
+        self.col_size_view = '12'
 
     @http.route([MOBILE_BASE_PATH+'work/add'],type='http', auth="user", website=True)
     def work_add(self, task=None, search='',**post):
@@ -96,13 +101,11 @@ class mobile_timereport_work(mobile_crud, http.Controller):
     @http.route([MOBILE_BASE_PATH+'<model("project.task"):task>/works/edit_grid'],type='http', auth="user", website=True)
     def work_edit_grid(self, task=None, search='', **post):
         if task:
-            return self.do_edit_grid(obj_ids=task.work_ids, **post)
+            return self.do_grid(obj_ids=task.work_ids)
 
     @http.route([MOBILE_BASE_PATH+'work/<model("project.task.work"):work>/delete'],type='http', auth="user", website=True)
     def work_delete(self, work=None, search='', **post):
         return self.do_delete(obj=work, base_path=MOBILE_BASE_PATH+'%s' %work.task_id.id)
-
-
 
 
     # time report
