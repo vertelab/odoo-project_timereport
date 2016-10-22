@@ -42,7 +42,8 @@ class mobile_timereport(mobile_crud, http.Controller):
         super(mobile_timereport, self).__init__()
         self.search_domain = [('date_start', '<', fields.Datetime.now())]
         self.model = 'project.task'
-        self.load_fields(['name', 'project_id', 'planned_hours', 'stage_id']) # help for description doesn't work
+        self.load_fields(['name', 'project_id', 'planned_hours', 'stage_id', 'work_ids'])
+        self.child_fileds = ['name', 'hours', 'date', 'user_id']
         self.root = MOBILE_BASE_PATH
         self.title = _('Task')
 
