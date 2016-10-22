@@ -71,12 +71,10 @@ class mobile_timereport_work(mobile_crud, http.Controller):
         super(mobile_timereport_work, self).__init__()
         #~ self.search_domain = [('task_id', '=', None)]
         self.model = 'project.task.work'
-        self.load_fields(['id', 'name', 'hours', 'date', 'user_id', 'task_id'])
+        self.load_fields(['name', 'hours', 'date', 'user_id', 'task_id'])
         for f in self.fields_info:
-            if f.name == 'task_id' or f.name == 'date' or f.name == 'id':
+            if f.name == 'task_id' or f.name == 'date':
                 f.type = 'hidden'
-            if f.name == 'id':
-                f.write = False
         self.root = MOBILE_BASE_PATH+'work/'
         self.title = _('Work')
         self.col_size_edit = '4'
@@ -98,15 +96,14 @@ class mobile_timereport_work(mobile_crud, http.Controller):
     def work_edit(self, work=None, search='', **post):
         return self.do_edit(obj=work,**post)
 
-    @http.route([MOBILE_BASE_PATH+'<model("project.task"):task>/works/edit_grid'],type='http', auth="user", website=True)
-    def work_edit_grid(self, task=None, search='', **post):
-        if task:
-            return self.do_grid(obj_ids=task.work_ids)
-
     @http.route([MOBILE_BASE_PATH+'work/<model("project.task.work"):work>/delete'],type='http', auth="user", website=True)
     def work_delete(self, work=None, search='', **post):
         return self.do_delete(obj=work, base_path=MOBILE_BASE_PATH+'%s' %work.task_id.id)
 
+    @http.route([MOBILE_BASE_PATH+'<model("project.task"):task>/works/edit_grid'],type='http', auth="user", website=True)
+    def work_edit_grid(self, task=None, search='', **post):
+        if task:
+            return self.do_grid(obj_ids=task.work_ids)
 
     # time report
     #~ def do_report(self,obj=None, base_path='/', **post):

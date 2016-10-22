@@ -14,7 +14,7 @@
         <template id="add_report_button" inherit_id="website_mobile.detail" name="Add Report Button">
             <xpath expr="//div[@id='edit-button-group']/t/div[@class='row mt16 mb16']" position="after">
                 <div class="row mt16 mb16 text-center">
-                    <a t-if="mode=='view'" type="button" t-att-href="'%swork/add/?task_id=%s&amp;user_id=%s' %(crud.root, object.id, user_id.id)"><button class="btn btn-primary btn-lg"><i class="fa fa-clock-o"/> Time Report</button></a>
+                    <a t-if="mode=='view'" type="button" t-att-href="'%swork/add/?task_id=%s&amp;user_id=%s&amp;date=%s' %(crud.root, object.id, user_id.id, str(datetime.datetime.now()).rpartition('.')[0])"><button class="btn btn-primary btn-lg"><i class="fa fa-clock-o"/> Time Report</button></a>
                 </div>
             </xpath>
         </template>
