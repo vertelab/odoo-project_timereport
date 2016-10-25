@@ -52,7 +52,7 @@ class mobile_timereport(mobile_crud, http.Controller):
     @http.route([MOBILE_BASE_PATH, MOBILE_BASE_PATH+'<model("project.task"):task>'],type='http', auth="user", website=True)
     def task_list(self, task=None, search='', **post):
         self.search_domain.append(('user_id', '=', request.uid))
-        return self.do_list(obj=task)
+        return self.do_list(obj=task, template_detail='mobile_project_timereport.layout_extend_timereport')
 
     @http.route([MOBILE_BASE_PATH+'<string:search>/search', MOBILE_BASE_PATH+'search'],type='http', auth="user", website=True)
     def task_search(self, search=None, **post):
@@ -81,7 +81,7 @@ class mobile_timereport_work(mobile_crud, http.Controller):
         self.root = MOBILE_BASE_PATH+'work/'
         self.title = _('Work')
         self.col_size_edit = '4'
-        self.col_size_view = '12'
+        self.col_size_view = '4'
 
     @http.route([MOBILE_BASE_PATH+'work/add'],type='http', auth="user", website=True)
     def work_add(self, task=None, search='',**post):
@@ -107,83 +107,3 @@ class mobile_timereport_work(mobile_crud, http.Controller):
     def work_edit_grid(self, task=None, search='', **post):
         if task:
             return self.do_grid(obj_ids=task.work_ids)
-
-    # time report
-    #~ def do_report(self,obj=None, base_path='/', **post):
-        #~ if request.httprequest.method == 'GET':
-            #~ return request.render(template['detail'], {'crud': self, 'object': obj, 'root': base_path, 'title': obj.name, 'mode': 'report'})
-        #~ else:
-            #~ try:
-                #~ self.validate_form()
-            #~ except Exception as e:
-                #~ return request.render(self.template['detail'], {'crud': self, 'object': obj, 'title': obj.name, 'mode': 'report'})
-            #~ else:
-                #~ try:
-                    #~ work = request.env['project.task.work'].create({
-                        #~ 'task_id': task.id,
-                        #~ 'name': post.get('worked_desc'),
-                        #~ 'hours': float(post.get('worked_hours')),
-                        #~ 'date': fields.Datetime.now(),
-                        #~ 'user_id': request.uid,
-                    #~ })
-                    #~ request.context['alerts']=[{'subject': _('Saved'),'message':_('Time report successful'),'type': 'success'}]
-                    #~ return request.render(self.template['detail'], {'crud': self, 'object': obj, 'title': obj.name, 'mode': 'report'})
-                #~ except: # Catch exception message
-                    #~ request.context['alerts']=[{'subject': _('Error'),'message':_('Time report failed'),'type': 'error'}]
-                    #~ return request.render(self.template['detail'], {'crud': self, 'object': obj, 'title': obj.name, 'mode': 'report'})
-
-    #~ @http.route([
-    #~ MODULE_BASE_PATH,
-    #~ MODULE_BASE_PATH + '<model("project.task"):task>',
-    #~ MODULE_BASE_PATH + '<model("project.task"):task>/report',
-    #~ MODULE_BASE_PATH + '<model("project.task"):task>/edit',
-    #~ MODULE_BASE_PATH + '<model("project.task"):task>/delete',
-    #~ MODULE_BASE_PATH + 'search',
-    #~ ], type='http', auth='user', website=True)
-    #~ def get_task(self, task=None, search='', **post):
-        #~ search_domain = [('user_id', '=', request.uid), ('date_start', '<', fields.Datetime.now())]
-        #~ model = 'project.task'
-        #~ fields_list =  ['name', 'project_id', 'description', 'planned_hours', 'stage_id']
-        #~ template = {'list': 'mobile_project_timereport.object_list', 'detail': 'mobile_project_timereport.object_detail'}
-
-        #~ if request.httprequest.url[-4:] == 'edit': #Edit
-            #~ if request.httprequest.method == 'GET':
-                #~ return request.render(template['detail'], {'model': model, 'object': task, 'fields': fields_list, 'root': MODULE_BASE_PATH, 'title': task.name, 'db': request.db, 'mode': 'edit'})
-            #~ else:
-                #~ values = {}
-                #~ for field in fields_list:
-                    #~ field_type = request.env[model].fields_get([field])[field]['type']
-                    #~ if field_type == 'many2one':
-                        #~ values[field] = int(post.get(field))
-                    #~ elif field_type == 'one2many':
-                        #~ pass
-                    #~ elif field_type == 'many2many':
-                        #~ pass
-                    #~ else:
-                        #~ values[field] = post.get(field)
-                #~ task.write(values)
-                #~ return request.render(template['detail'], {'model': model, 'object': task, 'fields': fields_list, 'root': MODULE_BASE_PATH, 'title': task.name, 'db': request.db, 'mode': 'view'})
-        #~ elif request.httprequest.url[-6:] == 'report': #Report
-            #~ if request.httprequest.method == 'GET':
-                #~ return request.render(template['detail'], {'model': model, 'object': task, 'fields': fields_list, 'root': MODULE_BASE_PATH, 'title': 'Time Report', 'db': request.db, 'mode': 'report'})
-            #~ else:
-                #~ work = request.env['project.task.work'].create({
-                    #~ 'task_id': task.id,
-                    #~ 'name': post.get('worked_desc'),
-                    #~ 'hours': float(post.get('worked_hours')),
-                    #~ 'date': fields.Datetime.now(),
-                    #~ 'user_id': request.uid,
-                #~ })
-                #~ return request.render(template['detail'], {'model': model, 'object': task, 'fields': fields_list, 'root': MODULE_BASE_PATH, 'title': post.get('worked_hours') + ' hours reported', 'db': request.db, 'mode': 'view'})
-        #~ if request.httprequest.url[-6:] == 'search': #Search
-            #~ if request.httprequest.method == 'POST':
-                #~ search = post.get('search_words')
-            #~ search_domain.append(('name', 'ilike', search))
-        #~ elif task:  # Detail
-            #~ return request.render(template['detail'], {'model': model, 'object': task, 'fields': fields_list, 'root': MODULE_BASE_PATH, 'title': 'Time Report', 'db': request.db, 'mode': 'view'})
-        #~ return request.render(template['list'], {
-            #~ 'objects': request.env[model].search(search_domain, order='date_start desc'),
-            #~ 'title': MODULE_TITLE,
-            #~ 'root': MODULE_BASE_PATH,
-            #~ 'db': request.db,
-        #~ })

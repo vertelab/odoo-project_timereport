@@ -7,16 +7,14 @@
                 <t t-set="root" t-value="root"/>
                 <t t-set="add" t-value="'%sadd' %root"/>
                 <t t-set="search" t-value="'%ssearch' %root"/>
-                <t t-raw="0"/>
+                <t t-call="website_mobile.detail">
+                    <t t-if="object">
+                        <div class="row mt16 mb16 text-center">
+                            <a t-if="mode=='view'" type="button" t-att-href="'%swork/add/?task_id=%s&amp;user_id=%s&amp;date=%s' %(crud.root, object.id, user_id.id, str(datetime.datetime.now()).rpartition('.')[0])"><button class="btn btn-primary btn-lg"><i class="fa fa-clock-o"/> Time Report</button></a>
+                        </div>
+                    </t>
+                </t>
             </t>
-        </template>
-
-        <template id="add_report_button" inherit_id="website_mobile.detail" name="Add Report Button">
-            <xpath expr="//div[@id='edit-button-group']/t/div[@class='row mt16 mb16']" position="after">
-                <div class="row mt16 mb16 text-center">
-                    <a t-if="mode=='view'" type="button" t-att-href="'%swork/add/?task_id=%s&amp;user_id=%s&amp;date=%s' %(crud.root, object.id, user_id.id, str(datetime.datetime.now()).rpartition('.')[0])"><button class="btn btn-primary btn-lg"><i class="fa fa-clock-o"/> Time Report</button></a>
-                </div>
-            </xpath>
         </template>
 
 <!--
