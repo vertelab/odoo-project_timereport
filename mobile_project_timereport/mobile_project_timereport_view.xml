@@ -3,24 +3,13 @@
     <data>
         <!-- mobile layout extend -->
         <template id="layout_extend_timereport" name="Main layout Extend Timereport">
-            <t t-call="website_mobile.mobile_layout">
-                <t t-set="root" t-value="root"/>
-                <t t-set="add" t-value="'%sadd' %root"/>
-                <t t-set="search" t-value="'%ssearch' %root"/>
-                <t t-call="website_mobile.detail">
-                    <t t-if="object">
-                        <div class="row mt16 mb16 text-center">
-                            <a t-if="mode=='view'" type="button" t-att-href="'%swork/add/?task_id=%s&amp;user_id=%s&amp;date=%s' %(crud.root, object.id, user_id.id, str(datetime.datetime.now()).rpartition('.')[0])"><button class="btn btn-primary btn-lg"><i class="fa fa-clock-o"/> Time Report</button></a>
-                        </div>
-                    </t>
+            <t t-call="website_mobile.detail">
+                <t t-if="object and mode =='view'">
+                    <li>
+                        <a type="button" t-att-href="'%swork/add/?task_id=%s&amp;user_id=%s&amp;date=%s' %(crud.root, object.id, user_id.id, str(datetime.datetime.now()).rpartition('.')[0])"><button class="btn btn-primary btn-lg"><i class="fa fa-clock-o fa-2x"/></button></a>
+                    </li>
                 </t>
             </t>
-        </template>
-        <!-- hide footer -->
-        <template id="hide_footer" inherit_id="website.layout">
-            <xpath expr="//footer" position="attributes">
-                <attribute name="class">hidden</attribute>
-            </xpath>
         </template>
         <!-- inherit bottom menu -->
         <template id="bottom_menu" inherit_id="website_mobile.mobile_layout">
@@ -31,11 +20,6 @@
         <template id="crm_partner_css" inherit_id="website_mobile.mobile_layout">
             <xpath expr="//t[@t-call-assets='website.assets_frontend']" position="after">
                 <style>
-
-                    .btn-lg {
-                        margin: auto;
-                        display: block;
-                    }
 
                     .task-row {
                         white-space: nowrap;
