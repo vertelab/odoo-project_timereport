@@ -28,6 +28,7 @@
 Project time report on mobile phone
 """,
     'author': 'Vertel AB',
+    'license': 'AGPL-3',
     'website': 'http://www.vertel.se',
     'depends': ['website_mobile', 'project_timesheet'],
     'data': [

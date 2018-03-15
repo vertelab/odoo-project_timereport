@@ -27,6 +27,7 @@ Report working time.
 ===================================================
 """,
 'author': 'Vertel AB',
+    'license': 'AGPL-3',
 'website': 'http://www.vertel.se',
 'depends': ['project','hr_timesheet_sheet','hr_timesheet','hr_timesheet_invoice','project_timesheet'],
 'data': ['project_view.xml',
