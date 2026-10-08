@@ -2,7 +2,7 @@
 ##############################################################################
 #
 # OpenERP, Open Source Management Solution, third party addon
-# Copyright (C) 2004-2015 Vertel AB (<http://vertel.se>).
+# Copyright (C) 2004-2015 Vertel Sverige AB (<http://vertel.se>).
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU Affero General Public License as
@@ -26,7 +26,7 @@
 Report working time.
 ===================================================
 """,
-'author': 'Vertel AB',
+'author': 'Vertel Sverige AB',
     'license': 'AGPL-3',
 'website': 'http://www.vertel.se',
 'depends': ['project','hr_timesheet_sheet','hr_timesheet','hr_timesheet_invoice','project_timesheet'],
